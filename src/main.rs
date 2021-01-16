@@ -1,21 +1,27 @@
 fn main() {
-    let x = 5;
+    let my_string = String::from("hello world");
 
-    let condition = true;
-    let y = if condition { 5 } else { 6 };
+    // first_word works on slices of `String`s
+    let word = first_word(&my_string[..]);
 
-    println!("{}", add(x, y));
+    let my_string_literal = "hello world";
 
-    println!("----");
+    // first_word works on slices of string literals
+    let word = first_word(&my_string_literal[..]);
 
-    let num = [10, 20, 30, 40, 50];
-
-    for n in (10..20).rev() {
-        println!("{}", n)
-    }
+    // Because string literals *are* string slices already,
+    // this works too, without the slice syntax!
+    let word = first_word(my_string_literal);
 }
 
-fn add(x: i32, y: i32) -> i32 {
-    println!("{} + {}", x, y);
-    x + y
+fn first_word(s: &str) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
 }
