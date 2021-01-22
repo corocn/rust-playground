@@ -1,44 +1,41 @@
-#[derive(Debug)]
-enum UsState {
-    Alabama,
-    Alaska,
-    // --snip--
-}
+mod back_of_house {
+    pub struct Breakfast {
+        pub toast: String,
+        seasonal_fruit: String,
+    }
 
-#[derive(Debug)]
-enum Coin {
-    Penny,
-    Nickel,
-    Dime,
-    Quarter(UsState),
-}
+    impl Breakfast {
+        pub fn summer(toast: &str) -> Breakfast {
+            Breakfast {
+                toast: String::from(toast),
+                seasonal_fruit: String::from("peaches"),
+            }
+        }
+    }
 
-fn value_in_cents(coin: Coin) -> u8 {
-    match coin {
-        Coin::Penny => 1,
-        Coin::Nickel => 5,
-        Coin::Dime => 10,
-        Coin::Quarter(state) => {
-            println!("{:?}", state);
-            25
-        },
+    pub enum Appetizer {
+        Soup,
+        Salad,
     }
 }
 
-fn plus_one(x: Option<i32>) -> Option<i32> {
-    match x {
-        Some(i) => Some(i + 1),
-        // None => None,
-        _ => None
-    }
+use self::back_of_house::Appetizer;
+
+pub fn eat_at_restaurant() {
+    // Order a breakfast in the summer with Rye toast
+    let mut meal = back_of_house::Breakfast::summer("Rye");
+    // Change our mind about what bread we'd like
+    meal.toast = String::from("Wheat");
+    println!("I'd like {} toast please", meal.toast);
+
+    // The next line won't compile if we uncomment it; we're not allowed
+    // to see or modify the seasonal fruit that comes with the meal
+    // meal.seasonal_fruit = String::from("blueberries");
+
+    let order1 = Appetizer::Soup;
+    let order2 = Appetizer::Salad;
 }
 
 fn main() {
-    let mut count = 0;
-    let coin = Coin::Quarter(UsState::Alaska);
-
-    match coin {
-        Coin::Quarter(state) => println!("State quarter from {:?}!", state),
-        _ => count += 1,
-    }
+    eat_at_restaurant();
 }
