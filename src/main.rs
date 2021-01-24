@@ -1,13 +1,28 @@
-mod front_of_house;
-
-pub use crate::front_of_house::hosting;
-
-pub fn eat_at_restaurant() {
-    hosting::add_to_waitlist();
-    hosting::add_to_waitlist();
-    hosting::add_to_waitlist();
+struct Item {
+    name: String
 }
 
+struct Item2 {
+    name: String
+}
+
+
 fn main() {
-    eat_at_restaurant();
+    // let mut v = vec![100, 32, 57];
+    // for i in &mut v {
+    //     *i += 50;
+    // }
+    //
+    // for i in &v {
+    //     println!("{}", i);
+    // }
+
+    let v = vec![
+        Item { name: String::from("hoge1") },
+        Item { name: String::from("hoge2") },
+    ];
+
+    for item in &v {
+        println!("{}", item.name);
+    }
 }
