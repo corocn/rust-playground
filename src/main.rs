@@ -1,12 +1,13 @@
+mod front_of_house;
+
+pub use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+    hosting::add_to_waitlist();
+}
+
 fn main() {
-    for n in 1..101 {
-            println!("{}", n);
-        if n % 3 == 0 {
-            println!("Fizz");
-        } else if n % 5 == 0 {
-            println!("Buzz");
-        } else if n & 3 == 0 && n % 5 == 0 {
-            println!("FizzBuzz");
-        }
-    }
+    eat_at_restaurant();
 }
