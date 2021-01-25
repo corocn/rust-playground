@@ -8,7 +8,7 @@ struct Item2 {
 
 
 fn main() {
-    let hello = "Здравствуйте";
+    let hello = "Hello World";
 
     let s = &hello[0..4];
 
