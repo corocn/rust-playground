@@ -1,16 +1,10 @@
-struct Item {
-    name: String
-}
-
-struct Item2 {
-    name: String
-}
-
+use std::collections::HashMap;
 
 fn main() {
-    let hello = "Hello World";
+    let mut scores = HashMap::new();
 
-    let s = &hello[0..4];
+    scores.insert(String::from("Blue"), 10);
+    scores.insert(String::from("Yellow"), 50);
 
-    println!("{}", s);
+    dbg!(scores);
 }
