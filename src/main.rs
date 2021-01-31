@@ -1,15 +1,23 @@
 fn main() {
     use std::collections::HashMap;
 
-    let mut scores = HashMap::new();
+    let text = "hello world wonderful world　hello";
 
-    scores.insert(String::from("Blue"), 10);
-    scores.insert(String::from("Blue"), 25);
+    let mut map = HashMap::new();
 
-    println!("{:?}", scores);
+    for word in text.split_whitespace() {
+        let count = map.entry(word).or_insert(0);
+        *count += 1;
+        println!("{}", word)
+    }
 
-    let key = String::from("Blue");
-    let value = scores.get(&key);
+    let mut c = 1;
+    let mut x = &c;
 
-    dbg!(value);
+    c += 1;
+
+    println!("{:?}", c);
+
+
+    // dbg!(value);
 }
