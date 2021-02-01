@@ -1,23 +1,10 @@
+use std::error::Error;
+use std::fs::File;
+
 fn main() {
-    use std::collections::HashMap;
+    use std::net::IpAddr;
 
-    let text = "hello world wonderful world　hello";
+    let home: IpAddr = "127.0.0.1".parse().unwrap();
 
-    let mut map = HashMap::new();
-
-    for word in text.split_whitespace() {
-        let count = map.entry(word).or_insert(0);
-        *count += 1;
-        println!("{}", word)
-    }
-
-    let mut c = 1;
-    let mut x = &c;
-
-    c += 1;
-
-    println!("{:?}", c);
-
-
-    // dbg!(value);
+    dbg!(home);
 }
