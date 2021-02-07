@@ -1,22 +1,57 @@
-struct Point<T, U> {
-    x: T,
-    y: U,
-}
+pub trait Summary {
+    fn summarize_author(&self) -> String;
 
-impl<T, U> Point<T, U> {
-    fn mixup<V, W>(self, other: Point<V, W>) -> Point<T, W> {
-        Point {
-            x: self.x,
-            y: other.y,
-        }
+    fn summarize(&self) -> String {
+        format!("(Read more from {}...)", self.summarize_author())
     }
 }
 
+pub struct NewsArticle {
+    pub headline: String,
+    pub location: String,
+    pub author: String,
+    pub content: String,
+}
+
+impl Summary for NewsArticle {
+    fn summarize_author(&self) -> String {
+        format!("@{}", self.author)
+    }
+}
+
+// pub struct Tweet {
+//     pub username: String,
+//     pub content: String,
+//     pub reply: bool,
+//     pub retweet: bool,
+// }
+//
+// impl Summary for Tweet {
+//     fn summarize(&self) -> String {
+//         format!("{}: {}", self.username, self.content)
+//     }
+// }
+
+// pub fn notify(item: &impl Summary) {
+//     println!("Breaking news! {}", item.summarize());
+// }
+
+pub fn notify<T: Summary>(item: &T) {
+    println!("Breaking news! {}", item.summarize());
+}
+
 fn main() {
-    let p1 = Point { x: 5, y: 10.4 };
-    let p2 = Point { x: "Hello", y: 'c' };
+    let article = NewsArticle {
+        headline: String::from("Penguins win the Stanley Cup Championship!"),
+        location: String::from("Pittsburgh, PA, USA"),
+        author: String::from("Iceburgh"),
+        content: String::from(
+            "The Pittsburgh Penguins once again are the best \
+             hockey team in the NHL.",
+        ),
+    };
 
-    let p3 = p1.mixup(p2);
+    println!("New article available! {}", article.summarize());
 
-    println!("p3.x = {}, p3.y = {}", p3.x, p3.y);
+    notify(&article);
 }
