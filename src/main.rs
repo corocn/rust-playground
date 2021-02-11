@@ -19,39 +19,50 @@ impl Summary for NewsArticle {
     }
 }
 
-// pub struct Tweet {
-//     pub username: String,
-//     pub content: String,
-//     pub reply: bool,
-//     pub retweet: bool,
-// }
-//
-// impl Summary for Tweet {
-//     fn summarize(&self) -> String {
-//         format!("{}: {}", self.username, self.content)
-//     }
-// }
+pub trait Hoge1 {
+    fn say1(&self) -> String;
+}
 
-// pub fn notify(item: &impl Summary) {
-//     println!("Breaking news! {}", item.summarize());
-// }
+impl Hoge1 for NewsArticle {
+    fn say1(&self) -> String {
+        return String::from("ほげわん");
+    }
+}
+
+pub trait Hoge2 {
+    fn say2(&self) -> String;
+}
+
+impl Hoge2 for NewsArticle {
+    fn say2(&self) -> String {
+        return String::from("ほげつー");
+    }
+}
 
 pub fn notify<T: Summary>(item: &T) {
     println!("Breaking news! {}", item.summarize());
 }
 
-fn main() {
-    let article = NewsArticle {
+pub fn test<T: Hoge1 + Hoge2>(item: &T) {
+    println!("{} {}", item.say1(), item.say2())
+}
+
+fn returns_hoge() -> impl Hoge1 + Hoge2 + Summary {
+    NewsArticle {
         headline: String::from("Penguins win the Stanley Cup Championship!"),
         location: String::from("Pittsburgh, PA, USA"),
         author: String::from("Iceburgh"),
         content: String::from(
             "The Pittsburgh Penguins once again are the best \
              hockey team in the NHL.",
-        ),
-    };
+    )}
+}
 
+fn main() {
+    let article = returns_hoge();
     println!("New article available! {}", article.summarize());
+
+    test(&article);
 
     notify(&article);
 }
