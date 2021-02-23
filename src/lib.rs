@@ -1,59 +1,23 @@
-pub fn greeting(name: &str) -> String {
-    format!("Hello {}!", name)
+pub fn add_two(a: i32) -> i32 {
+    a + 2
 }
 
-pub fn papapanic() {
-    panic!("papapa")
-}
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-#[test]
-fn greeting_contains_name() {
-    let result = greeting("Carol");
-    assert!(
-        result.contains("Carol"),
-        "Greeting did not contain name, value was `{}`",
-        result
-    );
-}
+    #[test]
+    fn add_two_and_two() {
+        assert_eq!(4, add_two(2));
+    }
 
-#[test]
-#[should_panic(expected="papapa")]
-fn check_panic() {
-    papapanic();
-}
+    #[test]
+    fn add_three_and_two() {
+        assert_eq!(5, add_two(3));
+    }
 
-#[test]
-fn it_works() -> Result<(), String> {
-    if 2 + 3 == 4 {
-        Ok(())
-    } else {
-        Err(String::from("two plus two does not equal four"))
+    #[test]
+    fn one_hundred() {
+        assert_eq!(102, add_two(100));
     }
 }
-
-// pub fn fizzbuzz(n: i32) -> String {
-//     if n % 3 == 0 && n % 5 == 0 {
-//         return String::from("fizzbuzz")
-//     } else if n % 3 == 0 {
-//         return String::from("fizz");
-//     } else if n % 5 == 0 {
-//         return String::from("buzz");
-//     }
-//
-//     return n.to_string();
-// }
-//
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
-//
-//     #[test]
-//     fn test1() {
-//         assert_eq!("1", fizzbuzz(1));
-//         assert_eq!("2", fizzbuzz(2));
-//         assert_eq!("fizz", fizzbuzz(3));
-//         assert_eq!("4", fizzbuzz(4));
-//         assert_eq!("buzz", fizzbuzz(5));
-//         assert_eq!("fizzbuzz", fizzbuzz(15));
-//     }
-// }
