@@ -1,12 +1,38 @@
-struct ImportantExcerpt<'a> {
-    part: &'a str,
-}
+use std::env;
+use std::fs;
 
 fn main() {
-    // 僕をイシュマエルとお呼び。何年か前・・・
-    let novel = String::from("Call me Ishmael. Some years ago...");
-    let first_sentence = novel.split('.')
-        .next()
-        .expect("Could not find a '.'");  // '.'が見つかりませんでした
-    let i = ImportantExcerpt { part: first_sentence };
+    let args: Vec<String> = env::args().collect();
+    let config = Config::new(&args);
+
+    println!("Searching for {}", config.query);
+    println!("In file {}", config.filename);
+
+    let contents = fs::read_to_string(config.filename)
+        .expect("Something went wrong reading the file");
+
+    println!("With text:\n{}", contents);
 }
+
+struct Config {
+    query: String,
+    filename: String,
+}
+
+impl Config {
+    fn new(args: &[String]) -> Config {
+        Config::parse_config(args)
+    }
+
+    fn parse_config(args: &[String]) -> Config {
+        let query = args[1].clone();
+        let filename = args[2].clone();
+
+        Config {
+            query,
+            filename,
+        }
+    }
+}
+
+

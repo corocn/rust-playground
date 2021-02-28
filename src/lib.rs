@@ -2,10 +2,6 @@ pub fn add_two(a: i32) -> i32 {
     a + 2
 }
 
-fn add_three(a: i32) -> i32 {
-    a + 3
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -23,10 +19,5 @@ mod tests {
     #[test]
     fn one_hundred() {
         assert_eq!(102, add_two(100));
-    }
-
-    #[test]
-    fn add_three_test() {
-        assert_eq!(4, add_three(1));
     }
 }
