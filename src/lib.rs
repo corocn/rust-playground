@@ -1,23 +1,32 @@
-pub fn add_two(a: i32) -> i32 {
-    a + 2
+use std::error::Error;
+use std::fs::File;
+use std::io::prelude::*;
+
+pub struct Config {
+    pub query: String,
+    pub filename: String,
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+impl Config {
+    pub fn new(args: &[String]) -> Result<Config, &'static str> {
+        if args.len() < 3 {
+            return Err("not enough arguments");
+        }
 
-    #[test]
-    fn add_two_and_two() {
-        assert_eq!(4, add_two(2));
-    }
+        let query = args[1].clone();
+        let filename = args[2].clone();
 
-    #[test]
-    fn add_three_and_two() {
-        assert_eq!(5, add_two(3));
+        Ok(Config { query, filename })
     }
+}
 
-    #[test]
-    fn one_hundred() {
-        assert_eq!(102, add_two(100));
-    }
+pub fn run(config: Config) -> Result<(), Box<Error>> {
+    let mut f = File::open(config.filename)?;
+
+    let mut contents = String::new();
+    f.read_to_string(&mut contents)?;
+
+    println!("With text:\n{}", contents);
+
+    Ok(())
 }
