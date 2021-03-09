@@ -1,32 +1,40 @@
-use std::error::Error;
-use std::fs::File;
-use std::io::prelude::*;
+//! # Art
+//!
+//! A library for modeling artistic concepts.
+//! #芸術
+//!
+//! 芸術的な概念をモデル化するライブラリ。
+//!
+pub use kinds::PrimaryColor;
+pub use kinds::SecondaryColor;
+pub use utils::mix;
 
-pub struct Config {
-    pub query: String,
-    pub filename: String,
-}
+pub mod kinds {
+    /// The primary colors according to the RYB color model.
+    /// RYBカラーモデルによる主色
+    pub enum PrimaryColor {
+        Red,
+        Yellow,
+        Blue,
+    }
 
-impl Config {
-    pub fn new(args: &[String]) -> Result<Config, &'static str> {
-        if args.len() < 3 {
-            return Err("not enough arguments");
-        }
-
-        let query = args[1].clone();
-        let filename = args[2].clone();
-
-        Ok(Config { query, filename })
+    /// The secondary colors according to the RYB color model.
+    /// RYBカラーモデルによる副色
+    pub enum SecondaryColor {
+        Orange,
+        Green,
+        Purple,
     }
 }
 
-pub fn run(config: Config) -> Result<(), Box<Error>> {
-    let mut f = File::open(config.filename)?;
+pub mod utils {
+    // use kinds::*;
+    use crate::kinds::{PrimaryColor, SecondaryColor};
 
-    let mut contents = String::new();
-    f.read_to_string(&mut contents)?;
-
-    println!("With text:\n{}", contents);
-
-    Ok(())
+    /// Combines two primary colors in equal amounts to create
+    /// a secondary color.
+    ///2つの主色を同じ割合で混合し、副色にする
+    pub fn mix(c1: PrimaryColor, c2: PrimaryColor) -> SecondaryColor {
+        // --snip--
+    }
 }
