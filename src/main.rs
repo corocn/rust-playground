@@ -1,9 +1,7 @@
-unsafe fn print_dangerously() {
-    println!("hoge");
-}
+fn do_something() {}
 
 fn main() {
-    unsafe {
-        print_dangerously();
+    for i in 0..100 {
+        do_something();
     }
 }
