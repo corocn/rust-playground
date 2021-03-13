@@ -9,7 +9,9 @@ pub struct LimitTracker<'a, T: 'a + Messenger> {
 }
 
 impl<'a, T> LimitTracker<'a, T>
-    where T: Messenger {
+where
+    T: Messenger,
+{
     pub fn new(messenger: &T, max: usize) -> LimitTracker<T> {
         LimitTracker {
             messenger,
@@ -25,10 +27,12 @@ impl<'a, T> LimitTracker<'a, T>
 
         if percentage_of_max >= 0.75 && percentage_of_max < 0.9 {
             // 警告: 割り当ての75％以上を使用してしまいました
-            self.messenger.send("Warning: You've used up over 75% of your quota!");
+            self.messenger
+                .send("Warning: You've used up over 75% of your quota!");
         } else if percentage_of_max >= 0.9 && percentage_of_max < 1.0 {
             // 切迫した警告: 割り当ての90%以上を使用してしまいました
-            self.messenger.send("Urgent warning: You've used up over 90% of your quota!");
+            self.messenger
+                .send("Urgent warning: You've used up over 90% of your quota!");
         } else if percentage_of_max >= 1.0 {
             // エラー: 割り当てを超えています
             self.messenger.send("Error: You are over your quota!");
@@ -47,7 +51,9 @@ mod tests {
 
     impl MockMessenger {
         fn new() -> MockMessenger {
-            MockMessenger { sent_messages: RefCell::new(vec![]) }
+            MockMessenger {
+                sent_messages: RefCell::new(vec![]),
+            }
         }
     }
 
