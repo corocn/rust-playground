@@ -14,3 +14,15 @@ fn main() {
         fizzbuzz(n)
     }
 }
+
+trait Human {
+    fn say(&self);
+}
+
+struct Yamada;
+
+impl Human for Yamada {
+    fn say(&self) {
+        println!("yeah!")
+    }
+}
