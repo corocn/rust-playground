@@ -1,7 +1,16 @@
-fn do_something() {}
+fn fizzbuzz(n: Option<i32>) {
+    match n {
+        Some(x) if x % 3 == 0 => println!("fizz"),
+        Some(x) if x % 5 == 0 => println!("buzz"),
+        Some(x) if x % 3 == 0 && x % 5 == 0 => println!("fizzbuzz"),
+        Some(x) => println!("{}", x),
+        None => panic!("hoge")
+    }
+}
 
 fn main() {
-    for _i in 0..100 {
-        do_something();
+    for x in (1..101) {
+        let n = Some(x);
+        fizzbuzz(n)
     }
 }
