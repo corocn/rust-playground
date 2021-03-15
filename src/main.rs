@@ -8,21 +8,29 @@ fn fizzbuzz(n: Option<i32>) {
     }
 }
 
+type MyResult = Result<i32, String>;
+
+fn error_handling(result: MyResult) -> MyResult {
+    let code = result?;
+    println!("code: {}", code);
+    Ok(200)
+}
+
 fn main() {
-    for x in (1..101) {
-        let n = Some(x);
-        fizzbuzz(n)
-    }
-}
+    // let result: Result<i32, String> = Ok(200);
+    let result: Result<i32, String> = Err(String::from("Hi"));
 
-trait Human {
-    fn say(&self);
-}
+    // match result {
+    //     Ok(code) => println!("code: {}", code),
+    //     Err(err) => println!("err: {}", err)
+    // }
 
-struct Yamada;
+    let result= error_handling(result);
 
-impl Human for Yamada {
-    fn say(&self) {
-        println!("yeah!")
+    // let a = result.expect("hoge");
+    // println!("{}", a);
+
+    if let Err(err) = result {
+        println!("{}", err);
     }
 }
