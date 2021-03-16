@@ -20,7 +20,10 @@ impl Future for CountDown {
     }
 }
 
-fn longest<'a, 'b>(x: &'a u32, y: &'b u32) -> &'b u32 where 'a: 'b {
+fn longest<'a, 'b>(x: &'a u32, y: &'b u32) -> &'b u32
+where
+    'a: 'b,
+{
     if x > y {
         x
     } else {
@@ -32,7 +35,7 @@ fn main() {
     let a = 1;
     let b = 2;
 
-    let x = longest( &a, &b);
+    let x = longest(&a, &b);
 
     println!("{}", x)
 
