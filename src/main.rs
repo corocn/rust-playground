@@ -1,77 +1,31 @@
-fn fizzbuzz(n: Option<i32>) {
-    match n {
-        Some(x) if x % 3 == 0 => println!("fizz"),
-        Some(x) if x % 5 == 0 => println!("buzz"),
-        Some(x) if x % 3 == 0 && x % 5 == 0 => println!("fizzbuzz"),
-        Some(x) => println!("{}", x),
-        None => panic!("hoge")
-    }
-}
+use futures::{executor, future::join_all};
+use std::future::Future;
+use std::pin::Pin;
+use std::task::{Context, Poll};
 
-type MyResult = Result<i32, String>;
+struct CountDown(u32);
 
-fn error_handling(result: MyResult) -> MyResult {
-    let code = result?;
-    println!("code: {}", code);
-    Ok(200)
-}
+impl Future for CountDown {
+    type Output = String;
 
-struct Dog;
-struct Cat;
-
-trait Tweet {
-    fn tweet(&self);
-}
-
-impl Tweet for Dog {
-    fn tweet(&self) {
-        println!("wanwan!");
-    }
-}
-
-impl Tweet for Cat {
-    fn tweet(&self) {
-        println!("nyanya!");
+    fn poll(mut self: Pin<&mut Self>, cx: &mut Context) -> Poll<String> {
+        if self.0 == 0 {
+            Poll::Ready("Zero!!!".to_string())
+        } else {
+            println!("{}", self.0);
+            self.0 -= 1;
+            cx.waker().wake_by_ref();
+            Poll::Pending
+        }
     }
 }
 
 fn main() {
-    let dog = Dog {};
-    let cat = Cat {};
-
-    dog.tweet();
-    cat.tweet();
-
-    let animal_vec: Vec<Box<dyn Tweet>> = vec![Box::new(dog), Box::new(cat)];
-
-    for animal in animal_vec {
-        animal.tweet();
+    let countdown_future1 = CountDown(10);
+    let countdown_future2 = CountDown(20);
+    let cd_set = join_all(vec![countdown_future1, countdown_future2]);
+    let res = executor::block_on(cd_set);
+    for (i, s) in res.iter().enumerate() {
+        println!("{}: {}", i, s);
     }
-
-    // let s = concat!("a", "b", 3);
-    // let s = format!("{}-{:?}", s, ("D", 5));
-    // println!("{}", s);
-    //
-    // println!("defined in file: {}", file!());
-    // println!("defined on line: {}", line!());
-    // println!("is test: {}", cfg!(unix));
-    // println!("CARGO_HOME: {}", env!("CARGO_HOME"));
-
-
-    // // let result: Result<i32, String> = Ok(200);
-    // let result: Result<i32, String> = Err(String::from("Hi"));
-    //
-    // // match result {
-    // //     Ok(code) => println!("code: {}", code),
-    // //     Err(err) => println!("err: {}", err)
-    // // }
-    //
-    // let result= error_handling(result);
-    //
-    // // let a = result.expect("hoge");
-    // // println!("{}", a);
-    //
-    // if let Err(err) = result {
-    //     println!("{}", err);
-    // }
 }
