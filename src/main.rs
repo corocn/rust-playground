@@ -1,49 +1,122 @@
-use futures::{executor, future::join_all};
-use std::future::Future;
-use std::pin::Pin;
-use std::task::{Context, Poll};
+use clap::Clap;
+use std::fs::File;
+use std::io::{stdin, BufRead, BufReader};
 
-struct CountDown(u32);
+#[derive(Clap, Debug)]
+#[clap(
+name = "My RPN program",
+version = "1.0.0",
+author = "Your name",
+about = "Super awesome sample RPN calculator"
+)]
+struct Opts {
+    #[clap(short, long)]
+    verbose: bool,
 
-impl Future for CountDown {
-    type Output = String;
+    #[clap(name = "FILE")]
+    formula_file: Option<String>,
+}
 
-    fn poll(mut self: Pin<&mut Self>, cx: &mut Context) -> Poll<String> {
-        if self.0 == 0 {
-            Poll::Ready("Zero!!!".to_string())
+fn main() {
+    let opts = Opts::parse();
+
+    if let Some(path) = opts.formula_file {
+        let f = File::open(path).unwrap();
+        let reader = BufReader::new(f);
+
+        run(reader, opts.verbose);
+    } else {
+        let stdin = stdin();
+        let reader = stdin.lock();
+        run(reader, opts.verbose);
+    }
+}
+
+fn run<R: BufRead>(reader: R, verbose: bool) {
+    let calc = RpnCalculator::new(verbose);
+
+    for line in reader.lines() {
+        let line = line.unwrap();
+        let answer = calc.eval(&line);
+        println!("{}", answer);
+    }
+}
+
+struct RpnCalculator(bool);
+
+impl RpnCalculator {
+    pub fn new(verbose: bool) -> Self {
+        Self(verbose)
+    }
+
+    pub fn eval(&self, formula: &str) -> i32 {
+        let mut tokens = formula.split_whitespace().rev().collect::<Vec<_>>();
+        self.eval_inner(&mut tokens)
+    }
+
+    fn eval_inner(&self, tokens: &mut Vec<&str>) -> i32 {
+        let mut stack = Vec::new();
+
+        while let Some(token) = tokens.pop() {
+            if let Ok(x) = token.parse::<i32>() {
+                stack.push(x);
+            } else {
+                let y = stack.pop().expect("invalid syntax");
+                let x = stack.pop().expect("invalid syntax");
+
+                let res = match token {
+                    "+" => x + y,
+                    "-" => x - y,
+                    "*" => x * y,
+                    "/" => x / y,
+                    "%" => x % y,
+                    _ => panic!("invalid token"),
+                };
+                stack.push(res);
+            }
+
+            if self.0 {
+                println!("{:?} {:?}", tokens, stack);
+            }
+        }
+
+        if stack.len() == 1 {
+            stack[0]
         } else {
-            println!("{}", self.0);
-            self.0 -= 1;
-            cx.waker().wake_by_ref();
-            Poll::Pending
+            panic!("invalid syntax")
         }
     }
 }
 
-fn longest<'a, 'b>(x: &'a u32, y: &'b u32) -> &'b u32
-where
-    'a: 'b,
-{
-    if x > y {
-        x
-    } else {
-        y
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_ok() {
+        let calc = RpnCalculator::new(false);
+        assert_eq!(calc.eval("1 1 +"), 2);
+        assert_eq!(calc.eval("50"), 50);
+        assert_eq!(calc.eval("-50"), -50);
+
+        assert_eq!(calc.eval("2 3 +"), 5);
+        assert_eq!(calc.eval("2 3 -"), -1);
+        assert_eq!(calc.eval("2 3 *"), 6);
+        assert_eq!(calc.eval("2 3 /"), 0);
+        assert_eq!(calc.eval("2 3 %"), 2);
     }
-}
 
-fn main() {
-    let a = 1;
-    let b = 2;
+    #[test]
+    #[should_panic]
+    fn test_ng1() {
+        let calc = RpnCalculator::new(false);
+        calc.eval("1 1 ^");
+    }
 
-    let x = longest(&a, &b);
-
-    println!("{}", x)
-
-    // let countdown_future1 = CountDown(10);
-    // let countdown_future2 = CountDown(20);
-    // let cd_set = join_all(vec![countdown_future1, countdown_future2]);
-    // let res = executor::block_on(cd_set);
-    // for (i, s) in res.iter().enumerate() {
-    //     println!("{}: {}", i, s);
-    // }
+    #[test]
+    #[should_panic]
+    fn test_ng2() {
+        let calc = RpnCalculator::new(false);
+        calc.eval("1 1");
+    }
 }
