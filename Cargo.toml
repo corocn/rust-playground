@@ -12,6 +12,7 @@ futures = "0.3.13"
 kana2phone = "0.1.0"
 rand = "0.6.0"
 clap = "3.0.0-beta.2"
+anyhow = "1.0.39"
 
 
 [profile.release]
