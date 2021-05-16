@@ -13,7 +13,17 @@ impl List {
     pub fn push_back(&mut self, value: i32) {
         match self.head {
             Some(_) => {
-                // TODO
+                let node: &Option<Box<Node>> = self.last_node();
+                match node {
+                    Some(mut box_node) => {
+                        let mut n = box_node;
+                        n.next = Some(Box::new(Node {
+                            value,
+                            next: None
+                        }))
+                    },
+                    None => {}
+                }
             },
             None => {
                 self.head = Some(Box::new(Node {
@@ -25,6 +35,15 @@ impl List {
     }
 
     pub fn last(&self) -> Option<i32> {
+        let node: &Option<Box<Node>> = self.last_node();
+
+        match node {
+            Some(box_node) => { Some(box_node.value) },
+            None => { None }
+        }
+    }
+
+    pub fn last_node(&self) -> &Option<Box<Node>> {
         let mut target: &Option<Box<Node>> = &self.head;
 
         loop {
@@ -37,12 +56,12 @@ impl List {
                             target = next;
                         },
                         None => {
-                            return Some(box_node.value);
+                            return target;
                         }
                     }
                 },
                 None => {
-                    return None;
+                    return target;
                 }
             }
         }
