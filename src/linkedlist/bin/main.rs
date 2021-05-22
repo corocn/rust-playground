@@ -71,12 +71,11 @@ impl List {
 fn main() {
     let mut list = List { head: None };
     list.push_back(1);
-    // list.push_back(2);
-    // list.push_back(3);
+    list.push_back(2);
+    list.push_back(3);
 
     let v = list.last();
     println!("{}", v.unwrap())
-
 
     // let mut list = LinkedList::new();
 
