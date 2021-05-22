@@ -6,63 +6,49 @@ struct Node {
 }
 
 struct List {
-    head: Option<Box<Node>>
+    head: Option<Node>
 }
 
 impl List {
-    pub fn push_back(&mut self, value: i32) {
+    pub fn length(&self) -> usize {
+        let mut count = 0;
+        let mut current_node = self.head.as_ref();
+        while let Some(node) = current_node {
+            count = count + 1;
+            current_node = node.next.as_ref().map(|node| &**node)
+        }
+        count
+    }
+
+    fn get_mut_node_at(&mut self, n: usize) -> Option<&mut Node> {
+        let mut nth_node = self.head.as_mut();
+        for _ in 0..n {
+            nth_node = match nth_node {
+                None => return None,
+                Some(node) => node.next.as_mut().map(|node| &mut **node),
+            }
+        }
+        nth_node
+    }
+
+    fn insert_at_last(&mut self, value: i32) {
         match self.head {
             Some(_) => {
-                let node: &Option<Box<Node>> = self.last_node();
-                match node {
-                    Some(mut box_node) => {
-                        let mut n = box_node;
-                        n.next = Some(Box::new(Node {
-                            value,
-                            next: None
-                        }))
-                    },
-                    None => {}
+                let len = self.length();
+                let mut current_node = self.get_mut_node_at(len - 1);
+
+                if let Some(node) = current_node {
+                    node.next = Some(Box::new(Node {
+                        value,
+                        next: None
+                    }))
                 }
             },
             None => {
-                self.head = Some(Box::new(Node {
+                self.head = Some(Node {
                     value,
                     next: None
-                }))
-            },
-        }
-    }
-
-    pub fn last(&self) -> Option<i32> {
-        let node: &Option<Box<Node>> = self.last_node();
-
-        match node {
-            Some(box_node) => { Some(box_node.value) },
-            None => { None }
-        }
-    }
-
-    pub fn last_node(&self) -> &Option<Box<Node>> {
-        let mut target: &Option<Box<Node>> = &self.head;
-
-        loop {
-            match target {
-                Some(box_node) => {
-                    let next: &Option<Box<Node>> = &box_node.next;
-
-                    match next {
-                        Some(_) => {
-                            target = next;
-                        },
-                        None => {
-                            return target;
-                        }
-                    }
-                },
-                None => {
-                    return target;
-                }
+                })
             }
         }
     }
@@ -70,12 +56,16 @@ impl List {
 
 fn main() {
     let mut list = List { head: None };
-    list.push_back(1);
-    list.push_back(2);
-    list.push_back(3);
+    println!("{}", list.length());
+    list.insert_at_last(1);
+    println!("{}", list.length());
+    list.insert_at_last(2);
+    println!("{}", list.length());
+    list.insert_at_last(3);
+    println!("{}", list.length());
 
-    let v = list.last();
-    println!("{}", v.unwrap())
+    // let v = list.last();
+    // println!("{}", v.unwrap())
 
     // let mut list = LinkedList::new();
 
