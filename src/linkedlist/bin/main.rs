@@ -31,6 +31,14 @@ impl List {
         nth_node
     }
 
+    fn dump(&self) {
+        let mut current_node = self.head.as_ref();
+        while let Some(node) = current_node {
+            println!("{}", node.value);
+            current_node = node.next.as_ref().map(|node| &**node)
+        }
+    }
+
     fn insert_at_last(&mut self, value: i32) {
         match self.head {
             Some(_) => {
@@ -56,13 +64,10 @@ impl List {
 
 fn main() {
     let mut list = List { head: None };
-    println!("{}", list.length());
     list.insert_at_last(1);
-    println!("{}", list.length());
     list.insert_at_last(2);
-    println!("{}", list.length());
     list.insert_at_last(3);
-    println!("{}", list.length());
+    list.dump();
 
     // let v = list.last();
     // println!("{}", v.unwrap())
