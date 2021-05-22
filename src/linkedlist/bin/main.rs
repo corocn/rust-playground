@@ -68,19 +68,4 @@ fn main() {
     list.insert_at_last(2);
     list.insert_at_last(3);
     list.dump();
-
-    // let v = list.last();
-    // println!("{}", v.unwrap())
-
-    // let mut list = LinkedList::new();
-
-    // list.push_back(1);
-    // list.push_back(2);
-    // list.push_back(3);
-    //
-    // dbg!(&list);
-    //
-    // assert_eq!(list.pop_front(), Some(1));
-    // assert_eq!(list.pop_front(), Some(2));
-    // assert_eq!(list.pop_front(), Some(3));
 }
