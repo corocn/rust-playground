@@ -6,8 +6,39 @@ struct Node {
 }
 
 struct List {
-    head: Option<Node>
+    head: Option<Box<Node>>
 }
+
+// impl List {
+//     fn iter(&self) -> ListIterator {
+//         if let Some(x) = self.head.as_ref() {
+//             ListIterator {
+//                 current_node: Box::new(*node);
+//             }
+//         } else {
+//             None
+//         }
+//
+//     }
+// }
+//
+// struct ListIterator<'a> {
+//     current_node: &'a Box<Node>
+// }
+//
+// impl Iterator for ListIterator<'_> {
+//     type Item = i32;
+//
+//     fn next(&mut self) -> Option<Self::Item> {
+//         let current_node = self.current_node.next.as_ref();
+//         if let Some(node) = current_node {
+//             self.current_node = node;
+//             Some(current_node.value)
+//         } else {
+//             None
+//         }
+//     }
+// }
 
 impl List {
     pub fn length(&self) -> usize {
@@ -43,7 +74,7 @@ impl List {
         match self.head {
             Some(_) => {
                 let len = self.length();
-                let mut current_node = self.get_mut_node_at(len - 1);
+                let current_node = self.get_mut_node_at(len - 1);
 
                 if let Some(node) = current_node {
                     node.next = Some(Box::new(Node {
@@ -53,10 +84,10 @@ impl List {
                 }
             },
             None => {
-                self.head = Some(Node {
+                self.head = Some(Box::new(Node {
                     value,
                     next: None
-                })
+                }))
             }
         }
     }
