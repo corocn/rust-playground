@@ -1,5 +1,7 @@
 // use std::collections::LinkedList;
 
+use std::fmt::Display;
+
 struct Node {
     value: i32,
     next: Option<Box<Node>>
@@ -92,6 +94,29 @@ impl List {
     }
 }
 
+#[derive(Debug)]
+struct Fibonacci {
+    a: i32,
+    b: i32
+}
+
+impl Fibonacci {
+    fn new() -> Fibonacci {
+        Fibonacci { a: 0, b: 1}
+    }
+}
+
+impl Iterator for Fibonacci {
+    type Item = i32;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let x = self.a;
+        self.a = self.b;
+        self.b += x;
+        Some(x)
+    }
+}
+
 fn main() {
     let mut list = List { head: None };
     list.insert_at_last(1);
@@ -102,4 +127,10 @@ fn main() {
     // for x in list.iter() {
     //     dbg!(x);
     // }
+
+    let mut x = Fibonacci::new();
+
+    for _ in (0..10) {
+        dbg!(x.next().unwrap());
+    }
 }
