@@ -9,36 +9,35 @@ struct List {
     head: Option<Box<Node>>
 }
 
-// impl List {
-//     fn iter(&self) -> ListIterator {
-//         if let Some(x) = self.head.as_ref() {
-//             ListIterator {
-//                 current_node: Box::new(*node);
-//             }
-//         } else {
-//             None
-//         }
-//
-//     }
-// }
-//
-// struct ListIterator<'a> {
-//     current_node: &'a Box<Node>
-// }
-//
-// impl Iterator for ListIterator<'_> {
-//     type Item = i32;
-//
-//     fn next(&mut self) -> Option<Self::Item> {
-//         let current_node = self.current_node.next.as_ref();
-//         if let Some(node) = current_node {
-//             self.current_node = node;
-//             Some(current_node.value)
-//         } else {
-//             None
-//         }
-//     }
-// }
+impl List {
+    // fn iter(&self) -> ListIterator {
+    //     if let Some(node) = self.head.as_ref() {
+    //         ListIterator {
+    //             current_node: node
+    //         }
+    //     } else {
+    //         None
+    //     }
+    // }
+}
+
+struct ListIterator<'a> {
+    current_node: &'a Box<Node>
+}
+
+impl Iterator for ListIterator<'_> {
+    type Item = i32;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let current_node = self.current_node.next.as_ref();
+        if let Some(node) = current_node {
+            self.current_node = node;
+            Some(node.value)
+        } else {
+            None
+        }
+    }
+}
 
 impl List {
     pub fn length(&self) -> usize {
@@ -46,17 +45,17 @@ impl List {
         let mut current_node = self.head.as_ref();
         while let Some(node) = current_node {
             count = count + 1;
-            current_node = node.next.as_ref().map(|node| &**node)
+            current_node = node.next.as_ref().map(|node| &*node)
         }
         count
     }
 
-    fn get_mut_node_at(&mut self, n: usize) -> Option<&mut Node> {
+    fn get_mut_node_at(&mut self, n: usize) -> Option<&mut Box<Node>> {
         let mut nth_node = self.head.as_mut();
         for _ in 0..n {
             nth_node = match nth_node {
                 None => return None,
-                Some(node) => node.next.as_mut().map(|node| &mut **node),
+                Some(node) => node.next.as_mut().map(|node| &mut *node),
             }
         }
         nth_node
@@ -66,7 +65,7 @@ impl List {
         let mut current_node = self.head.as_ref();
         while let Some(node) = current_node {
             println!("{}", node.value);
-            current_node = node.next.as_ref().map(|node| &**node)
+            current_node = node.next.as_ref().map(|node| &*node)
         }
     }
 
@@ -99,4 +98,8 @@ fn main() {
     list.insert_at_last(2);
     list.insert_at_last(3);
     list.dump();
+
+    // for x in list.iter() {
+    //     dbg!(x);
+    // }
 }
