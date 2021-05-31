@@ -10,6 +10,10 @@ edition = "2018"
 name = "linkedlist"
 path = "src/linkedlist/bin/main.rs"
 
+[[bin]]
+name = "sort"
+path = "src/sort/bin/main.rs"
+
 [dependencies]
 ferris-says = "0.2.0"
 futures = "0.3.13"
