@@ -66,24 +66,24 @@ impl List {
         let x = self.head.as_ref();
 
         ListIterator {
-            current_node: x
+            cursor: x
         }
     }
 }
 
 struct ListIterator<'a> {
-    current_node: Option<&'a Box<Node>>
+    cursor: Option<&'a Box<Node>>
 }
 
 impl Iterator for ListIterator<'_> {
     type Item = i32;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if let Some(cur_node) = self.current_node {
+        if let Some(cur_node) = self.cursor {
             if let Some(next_node) = cur_node.next.as_ref() {
-                self.current_node = Some(next_node);
+                self.cursor = Some(next_node);
             } else {
-                self.current_node = None
+                self.cursor = None
             }
             Some(cur_node.value)
         } else {
