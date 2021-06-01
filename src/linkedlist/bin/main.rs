@@ -1,4 +1,3 @@
-use std::fmt::Display;
 use std::env::current_dir;
 
 struct Node {
@@ -11,6 +10,10 @@ struct List {
 }
 
 impl List {
+    pub fn new() -> List {
+        List { head: None }
+    }
+
     pub fn length(&self) -> usize {
         let mut count = 0;
         let mut current_node = self.head.as_ref();
@@ -93,7 +96,7 @@ impl Iterator for ListIterator<'_> {
 }
 
 fn main() {
-    let mut list = List { head: None };
+    let mut list = List::new();
     list.insert_at_last(1);
     list.insert_at_last(2);
     list.insert_at_last(3);
