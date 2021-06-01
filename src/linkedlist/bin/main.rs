@@ -1,6 +1,5 @@
-// use std::collections::LinkedList;
-
 use std::fmt::Display;
+use std::env::current_dir;
 
 struct Node {
     value: i32,
@@ -9,36 +8,6 @@ struct Node {
 
 struct List {
     head: Option<Box<Node>>
-}
-
-impl List {
-    // fn iter(&self) -> ListIterator {
-    //     if let Some(node) = self.head.as_ref() {
-    //         ListIterator {
-    //             current_node: node
-    //         }
-    //     } else {
-    //         None
-    //     }
-    // }
-}
-
-struct ListIterator<'a> {
-    current_node: &'a Box<Node>
-}
-
-impl Iterator for ListIterator<'_> {
-    type Item = i32;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let current_node = self.current_node.next.as_ref();
-        if let Some(node) = current_node {
-            self.current_node = node;
-            Some(node.value)
-        } else {
-            None
-        }
-    }
 }
 
 impl List {
@@ -92,28 +61,34 @@ impl List {
             }
         }
     }
-}
 
-#[derive(Debug)]
-struct Fibonacci {
-    a: i32,
-    b: i32
-}
+    fn iter(&self) -> ListIterator {
+        let x = self.head.as_ref();
 
-impl Fibonacci {
-    fn new() -> Fibonacci {
-        Fibonacci { a: 0, b: 1}
+        ListIterator {
+            current_node: x
+        }
     }
 }
 
-impl Iterator for Fibonacci {
+struct ListIterator<'a> {
+    current_node: Option<&'a Box<Node>>
+}
+
+impl Iterator for ListIterator<'_> {
     type Item = i32;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let x = self.a;
-        self.a = self.b;
-        self.b += x;
-        Some(x)
+        if let Some(cur_node) = self.current_node {
+            if let Some(next_node) = cur_node.next.as_ref() {
+                self.current_node = Some(next_node);
+            } else {
+                self.current_node = None
+            }
+            Some(cur_node.value)
+        } else {
+            None
+        }
     }
 }
 
@@ -122,15 +97,11 @@ fn main() {
     list.insert_at_last(1);
     list.insert_at_last(2);
     list.insert_at_last(3);
-    list.dump();
+    list.insert_at_last(4);
+    list.insert_at_last(5);
+    // list.dump();
 
-    // for x in list.iter() {
-    //     dbg!(x);
-    // }
-
-    let mut x = Fibonacci::new();
-
-    for _ in (0..10) {
-        dbg!(x.next().unwrap());
+    for x in list.iter() {
+        dbg!(x);
     }
 }
