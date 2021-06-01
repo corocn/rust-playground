@@ -19,7 +19,7 @@ impl List {
         let mut current_node = self.head.as_ref();
         while let Some(node) = current_node {
             count = count + 1;
-            current_node = node.next.as_ref().map(|node| &*node)
+            current_node = node.next.as_ref()
         }
         count
     }
@@ -39,7 +39,7 @@ impl List {
         let mut current_node = self.head.as_ref();
         while let Some(node) = current_node {
             println!("{}", node.value);
-            current_node = node.next.as_ref().map(|node| &*node)
+            current_node = node.next.as_ref()
         }
     }
 
@@ -102,7 +102,7 @@ fn main() {
     list.insert_at_last(3);
     list.insert_at_last(4);
     list.insert_at_last(5);
-    // list.dump();
+    list.dump();
 
     for x in list.iter() {
         dbg!(x);
