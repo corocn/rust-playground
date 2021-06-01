@@ -79,13 +79,13 @@ impl Iterator for ListIterator<'_> {
     type Item = i32;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if let Some(cur_node) = self.cursor {
-            if let Some(next_node) = cur_node.next.as_ref() {
+        if let Some(current_node) = self.cursor {
+            if let Some(next_node) = current_node.next.as_ref() {
                 self.cursor = Some(next_node);
             } else {
                 self.cursor = None
             }
-            Some(cur_node.value)
+            Some(current_node.value)
         } else {
             None
         }
